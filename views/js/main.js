@@ -1,4 +1,4 @@
-/*
+/*  test change
 Welcome to the 60fps project! Your goal is to make Cam's Pizzeria website run
 jank-free at 60 frames per second.
 
@@ -502,6 +502,7 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
+//TODO:  THE CODE below calculates style, which causes a forced syncronous layout.
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
@@ -520,7 +521,7 @@ function updatePositions() {
 
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
-
+//  TODO  The Javascript below takes a lot of time to execute.  FIX!
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
