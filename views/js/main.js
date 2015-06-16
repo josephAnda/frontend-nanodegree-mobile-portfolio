@@ -501,11 +501,13 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-
+  //The sine arguement 'sinArg' was added to prevent FSL, which happens if
+  //The 'body' property is accessed when the variable phase is declared via the 'for' loop
+  var sinArg = document.body.scrollTop / 1250;
 //TODO:  THE CODE below calculates style, which causes a forced syncronous layout.
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
+    var phase = Math.sin(sinArg + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
