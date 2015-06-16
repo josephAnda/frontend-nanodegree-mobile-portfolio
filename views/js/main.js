@@ -1,4 +1,4 @@
-/*
+/*  test change
 Welcome to the 60fps project! Your goal is to make Cam's Pizzeria website run
 jank-free at 60 frames per second.
 
@@ -504,6 +504,7 @@ function updatePositions() {
   //The sine arguement 'sinArg' was added to prevent FSL, which happens if
   //The 'body' property is accessed when the variable phase is declared via the 'for' loop
   var sinArg = document.body.scrollTop / 1250;
+//TODO:  THE CODE below calculates style, which causes a forced syncronous layout.
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin(sinArg + (i % 5));
@@ -522,7 +523,7 @@ function updatePositions() {
 
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
-
+//  TODO  The Javascript below takes a lot of time to execute.  FIX!
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
