@@ -500,7 +500,9 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // Moves the sliding background pizzas based on scroll position
 //var latestScrollY = 0,
 var ticking = false,
-latestSinArg = 0;
+latestSinArg = 0,
+cachedItems;
+
 
 function updatePositions() {
   //requestAnimationFrame(updatePositions);
@@ -513,11 +515,18 @@ function updatePositions() {
   //The 'body' property is accessed when the variable phase is declared via the 'for' loop
   //var sinArg = document.body.scrollTop / 1250;
 //TODO:  THE CODE below calculates style, which causes a forced syncronous layout.
-  var items = document.querySelectorAll('.mover');
-  for (var i = 0; i < items.length; i++) {
+//Check out the new variable in action:  'cachedItems'.  This stores the value of 'items'
+//if they aren't already cached.  Doing this prevents repeated querying of the DOM for the 
+//'.mover' elements, which speeds up the page.
+  if (!cachedItems) {
+    var items = document.querySelectorAll('.mover');
+    cachedItems = items;
+  }
+  for (var i = 0; i < cachedItems.length; i++) {
     //var phase = Math.sin(sinArg + (i % 5));
     var phase = Math.sin(currentSinArg + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    //TODO:  Try storing the style information below outside of the update function . . . . 
+    cachedItems[i].style.left = cachedItems[i].basicLeft + 100 * phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -531,6 +540,13 @@ function updatePositions() {
   
 }
 // decouples scrolling from updating . . . 
+//  Note to self:  So the code below works by separating scrolling from updating animations.  
+//  onScroll creates the argument for sin outside of the update animations event
+//  request Tick helps ensure that an animation frame is only run if a request is not in
+// progress.  requestAnimationFrame runs the argument at the most convenient time for the 
+// browser in regards to its job of rendering frames.  updatePositions concerns itself
+// with only the latest argument of sin, rather than recalculating it using layout properties
+// every time there is a scrolling event.  This is cutting a lot of time from rendering!
 
 function onScroll() {
   //latestScrollY = window.scrollY;
@@ -542,6 +558,12 @@ function requestTick() {
   if (!ticking) {
     requestAnimationFrame(updatePositions);
   }
+  //QUESTION:  If ticking is set to true AFTER updatePositions sets it to false,
+  //how does !ticking ever evaluate to true again?  It seems as though the next line
+  //undoes the change to 'ticking' that occurs in updatePositions, which would make 
+  //requestTick() only run its conditional block once . . . (b/c !ticking would
+  // evaluate to false if ticking gets changed to true in the next line) unless I'm failing to 
+  //understand how requestAnimationFrame times this relative to the next line of code:
   ticking = true;
 }
 // runs updatePositions on scroll
