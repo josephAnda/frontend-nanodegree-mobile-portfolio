@@ -498,16 +498,25 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
+//var latestScrollY = 0,
+var ticking = false,
+latestSinArg = 0;
+
 function updatePositions() {
+  //requestAnimationFrame(updatePositions);
+  ticking = false;
+  //var currentScrollY = latestScrollY;
+  var currentSinArg = latestSinArg;
   frame++;
   window.performance.mark("mark_start_frame");
   //The sine arguement 'sinArg' was added to prevent FSL, which happens if
   //The 'body' property is accessed when the variable phase is declared via the 'for' loop
-  var sinArg = document.body.scrollTop / 1250;
+  //var sinArg = document.body.scrollTop / 1250;
 //TODO:  THE CODE below calculates style, which causes a forced syncronous layout.
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin(sinArg + (i % 5));
+    //var phase = Math.sin(sinArg + (i % 5));
+    var phase = Math.sin(currentSinArg + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -519,10 +528,26 @@ function updatePositions() {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
+  
+}
+// decouples scrolling from updating . . . 
+
+function onScroll() {
+  //latestScrollY = window.scrollY;
+  latestSinArg = document.body.scrollTop / 1250;
+  requestTick();
 }
 
+function requestTick() {
+  if (!ticking) {
+    requestAnimationFrame(updatePositions);
+  }
+  ticking = true;
+}
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
+
+window.addEventListener('scroll', onScroll, false);
+//window.addEventListener('scroll', updatePositions);
 //  TODO  The Javascript below takes a lot of time to execute.  FIX!
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
