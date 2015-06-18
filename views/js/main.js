@@ -550,12 +550,19 @@ function updatePositions() {
 
 function onScroll() {
   //latestScrollY = window.scrollY;
-  latestSinArg = document.body.scrollTop / 1250;
+  //latestSinArg = document.body.scrollTop / 1250;
   requestTick();
 }
 
 function requestTick() {
   if (!ticking) {
+    //call for the latest sinArg ONLY if there is not an active request for
+    //the next frame.  My temporary answer to the question below is that somehow
+    //'ticking' is set to true before updatePositions can run (perhaps it waits
+    // for the beginning of the next frame to run updatePositions!), at which point
+    // 'ticking' is set to false within the updatePositions method, and another tick can
+    // be requested :)
+    latestSinArg = document.body.scrollTop / 1250;
     requestAnimationFrame(updatePositions);
   }
   //QUESTION:  If ticking is set to true AFTER updatePositions sets it to false,
