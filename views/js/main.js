@@ -501,7 +501,8 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 //var latestScrollY = 0,
 var ticking = false,
 latestSinArg = 0,
-cachedItems;
+cachedItems,
+cachedItemStyles = [];
 
 
 function updatePositions() {
@@ -521,12 +522,16 @@ function updatePositions() {
   if (!cachedItems) {
     var items = document.querySelectorAll('.mover');
     cachedItems = items;
+    /*for (var i = 0; i < cachedItems.length; i ++) {
+      cachedItemStyles[i] = cachedItems[i].style.left;
+    }*/
   }
   for (var i = 0; i < cachedItems.length; i++) {
     //var phase = Math.sin(sinArg + (i % 5));
     var phase = Math.sin(currentSinArg + (i % 5));
     //TODO:  Try storing the style information below outside of the update function . . . . 
     cachedItems[i].style.left = cachedItems[i].basicLeft + 100 * phase + 'px';
+    //cachedItemStyles[i] = cachedItems[i].basicLeft + 100 * phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
