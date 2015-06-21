@@ -512,13 +512,7 @@ function updatePositions() {
   var currentSinArg = latestSinArg;
   frame++;
   window.performance.mark("mark_start_frame");
-  //The sine arguement 'sinArg' was added to prevent FSL, which happens if
-  //The 'body' property is accessed when the variable phase is declared via the 'for' loop
-  //var sinArg = document.body.scrollTop / 1250;
-//TODO:  THE CODE below calculates style, which causes a forced syncronous layout.
-//Check out the new variable in action:  'cachedItems'.  This stores the value of 'items'
-//if they aren't already cached.  Doing this prevents repeated querying of the DOM for the 
-//'.mover' elements, which speeds up the page.
+  .
   /*if (!cachedItems) {
     //faster than querySelectorAll?
     var items = document.getElementsByClassName('mover');
@@ -526,19 +520,14 @@ function updatePositions() {
     
   }*/
   var items = document.getElementsByClassName('mover');
-  /*for (var i = 0; i < cachedItems.length; i ++) {
-      cachedItemStyles[i] = cachedItems[i].style.left; 
-    }*/
+
   //stores five possible phases, reducing calls to the SinArg
   var phases = [];
   for (var i = 0; i < 5; i++) {
     phases[i] = Math.sin(currentSinArg + (i % 5));
   }
   for (var i = 0; i < items.length; i++) {
-    //var phase = Math.sin(sinArg + (i % 5));
-    //var phase = Math.sin(currentSinArg + (i % 5));
-    //TODO:  Try storing the style information below outside of the update function . . . . 
-    //cachedItems[i].style.transform = 'translateX(' + cachedItems[i].basicLeft + parseInt(100, 10) * phase  + 'px' + ')';
+     + parseInt(100, 10) * phase  + 'px' + ')';
     var pixelsString = items[i].basicLeft + 100 * phases[i % 5] - 1250 + 'px';
     items[i].style.transform = 'translateX(' + pixelsString + ')';
     //cachedItems[i].style.left = cachedItems[i].basicLeft + 100 * phase + 'px';
@@ -555,14 +544,7 @@ function updatePositions() {
   }
   
 }
-// decouples scrolling from updating . . . 
-//  Note to self:  So the code below works by separating scrolling from updating animations.  
-//  onScroll creates the argument for sin outside of the update animations event
-//  request Tick helps ensure that an animation frame is only run if a request is not in
-// progress.  requestAnimationFrame runs the argument at the most convenient time for the 
-// browser in regards to its job of rendering frames.  updatePositions concerns itself
-// with only the latest argument of sin, rather than recalculating it using layout properties
-// every time there is a scrolling event.  This is cutting a lot of time from rendering!
+
 
 function onScroll() {
   //latestScrollY = window.scrollY;
@@ -572,27 +554,17 @@ function onScroll() {
 
 function requestTick() {
   if (!ticking) {
-    //call for the latest sinArg ONLY if there is not an active request for
-    //the next frame.  My temporary answer to the question below is that somehow
-    //'ticking' is set to true before updatePositions can run (perhaps it waits
-    // for the beginning of the next frame to run updatePositions!), at which point
-    // 'ticking' is set to false within the updatePositions method, and another tick can
-    // be requested :)
+    
     latestSinArg = document.body.scrollTop / 1250;
     requestAnimationFrame(updatePositions);
   }
-  //QUESTION:  If ticking is set to true AFTER updatePositions sets it to false,
-  //how does !ticking ever evaluate to true again?  It seems as though the next line
-  //undoes the change to 'ticking' that occurs in updatePositions, which would make 
-  //requestTick() only run its conditional block once . . . (b/c !ticking would
-  // evaluate to false if ticking gets changed to true in the next line) unless I'm failing to 
-  //understand how requestAnimationFrame times this relative to the next line of code:
+  stAnimationFrame times this relative to the next line of code:
   ticking = true;
 }
 // runs updatePositions on scroll
 
 window.addEventListener('scroll', onScroll, false);
-//window.addEventListener('scroll', updatePositions);
+
 //  TODO  The Javascript below takes a lot of time to execute.  FIX!
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
