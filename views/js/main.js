@@ -498,7 +498,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
-//var latestScrollY = 0,
+
 var ticking = false,
 latestSinArg = 0,
 cachedItems,
@@ -506,13 +506,12 @@ cachedItemStyles = [];
 
 
 function updatePositions() {
-  //requestAnimationFrame(updatePositions);
+
   ticking = false;
-  //var currentScrollY = latestScrollY;
   var currentSinArg = latestSinArg;
   frame++;
   window.performance.mark("mark_start_frame");
-  .
+
   /*if (!cachedItems) {
     //faster than querySelectorAll?
     var items = document.getElementsByClassName('mover');
@@ -527,11 +526,10 @@ function updatePositions() {
     phases[i] = Math.sin(currentSinArg + (i % 5));
   }
   for (var i = 0; i < items.length; i++) {
-     + parseInt(100, 10) * phase  + 'px' + ')';
+
     var pixelsString = items[i].basicLeft + 100 * phases[i % 5] - 1250 + 'px';
     items[i].style.transform = 'translateX(' + pixelsString + ')';
-    //cachedItems[i].style.left = cachedItems[i].basicLeft + 100 * phase + 'px';
-    //cachedItemStyles[i] = cachedItems[i].basicLeft + 100 * phase + 'px';
+
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -547,8 +545,6 @@ function updatePositions() {
 
 
 function onScroll() {
-  //latestScrollY = window.scrollY;
-  //latestSinArg = document.body.scrollTop / 1250;
   requestTick();
 }
 
@@ -558,7 +554,7 @@ function requestTick() {
     latestSinArg = document.body.scrollTop / 1250;
     requestAnimationFrame(updatePositions);
   }
-  stAnimationFrame times this relative to the next line of code:
+
   ticking = true;
 }
 // runs updatePositions on scroll
