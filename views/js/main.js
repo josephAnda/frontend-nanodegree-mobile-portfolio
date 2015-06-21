@@ -498,7 +498,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
-//var latestScrollY = 0,
+
 var ticking = false,
 latestSinArg = 0,
 cachedItems,
@@ -506,19 +506,12 @@ cachedItemStyles = [];
 
 
 function updatePositions() {
-  //requestAnimationFrame(updatePositions);
+
   ticking = false;
-  //var currentScrollY = latestScrollY;
   var currentSinArg = latestSinArg;
   frame++;
   window.performance.mark("mark_start_frame");
-  //The sine arguement 'sinArg' was added to prevent FSL, which happens if
-  //The 'body' property is accessed when the variable phase is declared via the 'for' loop
-  //var sinArg = document.body.scrollTop / 1250;
-//TODO:  THE CODE below calculates style, which causes a forced syncronous layout.
-//Check out the new variable in action:  'cachedItems'.  This stores the value of 'items'
-//if they aren't already cached.  Doing this prevents repeated querying of the DOM for the 
-//'.mover' elements, which speeds up the page.
+
   /*if (!cachedItems) {
     //faster than querySelectorAll?
     var items = document.getElementsByClassName('mover');
@@ -535,14 +528,10 @@ function updatePositions() {
     phases[i] = Math.sin(currentSinArg + (i % 5));
   }
   for (var i = 0; i < items.length; i++) {
-    //var phase = Math.sin(sinArg + (i % 5));
-    //var phase = Math.sin(currentSinArg + (i % 5));
-    //TODO:  Try storing the style information below outside of the update function . . . . 
-    //cachedItems[i].style.transform = 'translateX(' + cachedItems[i].basicLeft + parseInt(100, 10) * phase  + 'px' + ')';
+
     var pixelsString = items[i].basicLeft + 100 * phases[i % 5] - 1250 + 'px';
     items[i].style.transform = 'translateX(' + pixelsString + ')';
-    //cachedItems[i].style.left = cachedItems[i].basicLeft + 100 * phase + 'px';
-    //cachedItemStyles[i] = cachedItems[i].basicLeft + 100 * phase + 'px';
+
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -556,17 +545,8 @@ function updatePositions() {
   
 }
 // decouples scrolling from updating . . . 
-//  Note to self:  So the code below works by separating scrolling from updating animations.  
-//  onScroll creates the argument for sin outside of the update animations event
-//  request Tick helps ensure that an animation frame is only run if a request is not in
-// progress.  requestAnimationFrame runs the argument at the most convenient time for the 
-// browser in regards to its job of rendering frames.  updatePositions concerns itself
-// with only the latest argument of sin, rather than recalculating it using layout properties
-// every time there is a scrolling event.  This is cutting a lot of time from rendering!
 
 function onScroll() {
-  //latestScrollY = window.scrollY;
-  //latestSinArg = document.body.scrollTop / 1250;
   requestTick();
 }
 
@@ -581,18 +561,13 @@ function requestTick() {
     latestSinArg = document.body.scrollTop / 1250;
     requestAnimationFrame(updatePositions);
   }
-  //QUESTION:  If ticking is set to true AFTER updatePositions sets it to false,
-  //how does !ticking ever evaluate to true again?  It seems as though the next line
-  //undoes the change to 'ticking' that occurs in updatePositions, which would make 
-  //requestTick() only run its conditional block once . . . (b/c !ticking would
-  // evaluate to false if ticking gets changed to true in the next line) unless I'm failing to 
-  //understand how requestAnimationFrame times this relative to the next line of code:
+
   ticking = true;
 }
 // runs updatePositions on scroll
 
 window.addEventListener('scroll', onScroll, false);
-//window.addEventListener('scroll', updatePositions);
+
 //  TODO  The Javascript below takes a lot of time to execute.  FIX!
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
