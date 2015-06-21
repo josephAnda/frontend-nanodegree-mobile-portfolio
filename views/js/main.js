@@ -519,18 +519,29 @@ function updatePositions() {
 //Check out the new variable in action:  'cachedItems'.  This stores the value of 'items'
 //if they aren't already cached.  Doing this prevents repeated querying of the DOM for the 
 //'.mover' elements, which speeds up the page.
-  if (!cachedItems) {
-    var items = document.querySelectorAll('.mover');
+  /*if (!cachedItems) {
+    //faster than querySelectorAll?
+    var items = document.getElementsByClassName('mover');
     cachedItems = items;
-    /*for (var i = 0; i < cachedItems.length; i ++) {
-      cachedItemStyles[i] = cachedItems[i].style.left;
+    
+  }*/
+  var items = document.getElementsByClassName('mover');
+  /*for (var i = 0; i < cachedItems.length; i ++) {
+      cachedItemStyles[i] = cachedItems[i].style.left; 
     }*/
+  //stores five possible phases, reducing calls to the SinArg
+  var phases = [];
+  for (var i = 0; i < 5; i++) {
+    phases[i] = Math.sin(currentSinArg + (i % 5));
   }
-  for (var i = 0; i < cachedItems.length; i++) {
+  for (var i = 0; i < items.length; i++) {
     //var phase = Math.sin(sinArg + (i % 5));
-    var phase = Math.sin(currentSinArg + (i % 5));
+    //var phase = Math.sin(currentSinArg + (i % 5));
     //TODO:  Try storing the style information below outside of the update function . . . . 
-    cachedItems[i].style.left = cachedItems[i].basicLeft + 100 * phase + 'px';
+    //cachedItems[i].style.transform = 'translateX(' + cachedItems[i].basicLeft + parseInt(100, 10) * phase  + 'px' + ')';
+    var pixelsString = items[i].basicLeft + 100 * phases[i % 5] - 1250 + 'px';
+    items[i].style.transform = 'translateX(' + pixelsString + ')';
+    //cachedItems[i].style.left = cachedItems[i].basicLeft + 100 * phase + 'px';
     //cachedItemStyles[i] = cachedItems[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -587,7 +598,7 @@ window.addEventListener('scroll', onScroll, false);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  for (var i = 0; i < 24; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
