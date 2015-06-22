@@ -10,6 +10,7 @@
 body {
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   background: black;
+
 }
 
 input {
@@ -28,7 +29,7 @@ form {
 #pizzaSize {
   font-weight: 800;
 }
-
+/*added will-change property*/
 .mover {
   position: fixed;
   width: 256px;

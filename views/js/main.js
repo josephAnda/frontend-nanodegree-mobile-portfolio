@@ -500,9 +500,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // Moves the sliding background pizzas based on scroll position
 
 var ticking = false,
-latestSinArg = 0,
-cachedItems,
-cachedItemStyles = [];
+latestSinArg = 0;
 
 
 function updatePositions() {
@@ -543,25 +541,27 @@ function updatePositions() {
   
 }
 
+// routes scrolling event into requestAnimationFrame() through onScroll
+
+window.addEventListener('scroll', onScroll, false);
 
 function onScroll() {
   requestTick();
 }
 
+//Ensures one scroll request per frame via ticking boolean
 function requestTick() {
   if (!ticking) {
-    
+    //ensures one argument for sine function per tick, reduces scrollTop calls
     latestSinArg = document.body.scrollTop / 1250;
     requestAnimationFrame(updatePositions);
   }
 
   ticking = true;
 }
-// runs updatePositions on scroll
 
-window.addEventListener('scroll', onScroll, false);
 
-//  TODO  The Javascript below takes a lot of time to execute.  FIX!
+// Reduced the number of pizzas from 200 to 24
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
