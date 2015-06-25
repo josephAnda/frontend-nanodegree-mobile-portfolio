@@ -18,6 +18,8 @@ cameron *at* udacity *dot* com
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
+"use strict"; //  It's okay to have strict mode enabled globally, right?
+
 var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -141,6 +143,7 @@ pizzaIngredients.crusts = [
   "Flatbread Crust",
   "Stuffed Crust"
 ];
+//  global variable to prevent direct queries to DOM.  Uses getElementsByClassName vs querySelectorAll
 var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
 // Name generator pulled from http://saturdaykid.com/usernames/generator.html
 // Capitalizes first letter of each word
@@ -536,7 +539,7 @@ function updatePositions() {
   }
   for (var i = 0; i < items.length; i++) {
 
-    var pixelsString = 100 * phases[i % 5] + 'px';
+    var pixelsString = 100 * phases[i % 5] + 'px';  //changed pixelsString syntax for clarity
     items[i].style.transform = 'translateX(' + pixelsString + ')';
 
   }
@@ -570,29 +573,39 @@ function requestTick() {
 
   ticking = true;
 }
-
-
-// Reduced the number of pizzas from 200 to 24
+// cross-browser solution for finding doc height including scroll
+//  Source:  https://cube3x.com/find-document-height-using-javascript-cross-browser-solution/
+//  Note:  Currently the function below is not implemented in the code, but could be used to 
+//  Modify the algorithm for determining an appropriate number of rows. 
+function getDocHeight() {
+    var D = document;
+    return Math.max(
+        D.body.scrollHeight, D.documentElement.scrollHeight,
+        D.body.offsetHeight, D.documentElement.offsetHeight,
+        D.body.clientHeight, D.documentElement.clientHeight
+    );
+}
+// 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  // calculates rows based on number of pizza containers and columns 
-  var rows = Math.floor(pizzaContainers.length / cols );
-  //  Our window probably won't contain all rows and columns, so we scale by .5
-  var numberOfPizzas = rows * cols * .5 
-  //changed i < 24 to i < (rows * cols)
+  //  get pizza container height
+  var containerHeight = parseInt(pizzaContainers[pizzaContainers.length - 1].style.height);
+  //  dynamically calculate a sensible number of rows based on window size
+  var rows = Math.ceil(window.innerHeight / containerHeight + 1);
+  var numberOfPizzas = rows * cols;
+  var elem = document.createElement('img');  //moved 'elem' outside of the loop.  Copy must be created within loop
   for (var i = 0; i < numberOfPizzas; i++) {
-    var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
-    // testing addition of 'left' property
     elem.style.left = (i % cols) * s + 'px';
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    var e = elem.cloneNode();   //  Creates a copy of 'elem' so that multiple pizzas are generated.  
+    document.querySelector("#movingPizzas1").appendChild(e);
   }
   updatePositions();
 });
